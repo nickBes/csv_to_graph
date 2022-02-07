@@ -1,18 +1,17 @@
-// we have only one form so we can use querySelector
-const form = document.querySelector('form')
+// we have only one input so we can use querySelector
+const input = document.querySelector('input')
+
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
 
-form.onchange = async () => {
-    const data = new FormData(form)
-    // if form doesn't have an input of name file stop
-    if (!data.has('file')) return
-    const file = data.get('file')
+input.onchange = async () => {
+    const file = input.files[0];
     if (file instanceof File) {
         const text = await file.text()
         coords = parseTextCSV(text)
         console.log(coords)
     }
+    input.value = ""
 }
 
 function parseTextCSV (text) {
