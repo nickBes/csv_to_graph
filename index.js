@@ -21,7 +21,7 @@ function parseTextCSV (text) {
                             // this might set numbers as NaN when string is given
                             let [x, y] = str.split(',').map(val => parseFloat(val))
                             // will return 0 for invalid values
-                            if (isValidNum(x)) {
+                            if (isInvalidNum(x)) {
                                 return 0
                             }
 
@@ -32,6 +32,6 @@ function parseTextCSV (text) {
     }
 }
 
-function isValidNum(num) {
+function isInvalidNum(num) {
     return typeof num === "undefined" || isNaN(num)
 }
