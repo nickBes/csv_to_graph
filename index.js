@@ -5,12 +5,17 @@ const input = document.querySelector('input')
 let coords;
 
 input.onchange = async () => {
+    // if no files were supplied
+    if(!input.files || input.files.length == 0) return;
+
     const file = input.files[0];
     if (file instanceof File) {
         const text = await file.text()
         coords = parseTextCSV(text)
         console.log(coords)
     }
+
+    // deselect the file so that we can detect if it is selected once again.
     input.value = ""
 }
 
