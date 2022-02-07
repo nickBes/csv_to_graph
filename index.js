@@ -9,27 +9,29 @@ form.onchange = async () => {
     let file = data.get('file')
     if (file instanceof File) {
         const text = await file.text()
-        matrix = await parseTextCSV(text)
+        matrix = parseTextCSV(text)
         console.log(matrix)
     }
 }
 
-async function parseTextCSV (text) {
+function parseTextCSV (text) {
     if (typeof text === "string") {
-        let rows = text.split('\n')
-        let parsedRows = await Promise.all(rows.map(str => {
-            // this might set numbers as NaN when string is given
-            let [x, y] = str.split(',').map(val => parseFloat(val))
-            // we can have invalid y values because we'll consider
-            // them as holes, but we should remove points with invalid
-            // x values 
-            if (typeof x === "undefined" || isNaN(x)) {
-                return 0
-            }
-            return [x, y]
-        }))
-        // return the matrix without invalid rows:
-        // 0 returns false, and array returns true
-        return parsedRows.filter(val => val)
+        let parsedRows = text.split('\n') // seperate rows
+                        .map(str => { // parse data into a matrix
+                            // this might set numbers as NaN when string is given
+                            let [x, y] = str.split(',').map(val => parseFloat(val))
+                            // will return 0 for invalid values
+                            if (isValidNum(x)) {
+                                return 0
+                            }
+
+                            return [x, y]
+                        })
+                        .filter(val => val) // filter 0 values
+        return parsedRows
     }
+}
+
+function isValidNum(num) {
+    return typeof num === "undefined" || isNaN(num)
 }
