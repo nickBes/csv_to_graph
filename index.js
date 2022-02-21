@@ -45,6 +45,9 @@ function isInvalidNum(num) {
     return typeof num === "undefined" || isNaN(num)
 }
 
+// The canvas treats the point (0,0) as its top left, so increasing the y value of a point means
+// moving it down, and not up. This is not how our users expect y values to work, so we must invert
+// the y values that we get as input to convert them to canvas space. 
 function convertPointToCanvasSpace(point) {
     const [x, y] = point
     return [x, canvas.height - y]
@@ -67,7 +70,7 @@ function drawGraph() {
 
     // draw a line connecting all the points
     ctx.strokeStyle = '#FF0000'
-    let firstPoint = coords[0]
+    const firstPoint = coords[0]
     ctx.moveTo(...convertPointToCanvasSpace(firstPoint))
     for (const point of coords.slice(1)) {
         ctx.lineTo(...convertPointToCanvasSpace(point))
