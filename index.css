@@ -1,0 +1,9 @@
+canvas {
+    width: 400px;
+    height: 400px;
+}
+
+#graphTitle{
+    width: 400px;
+    text-align: center;
+}

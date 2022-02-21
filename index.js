@@ -4,8 +4,16 @@ const input = document.querySelector('input')
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
 
+const graphPropertiesForm = document.querySelector('#graphPropertiesForm')
+
+const graphTitle = document.querySelector('#graphTitle')
+
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
+let graphProperties = {};
+
+// load the default graphProperties
+updateGraphProperties()
 
 input.onchange = async () => {
     // if no files were supplied
@@ -22,19 +30,32 @@ input.onchange = async () => {
     input.value = ""
 }
 
+graphPropertiesForm.oninput = () => {
+    updateGraphProperties()
+    drawGraph()
+}
+
+// updates the graphProperties object according to the form data
+function updateGraphProperties(){
+    const formData = new FormData(graphPropertiesForm);
+    for (let [key, value] of formData) {
+        graphProperties[key] = value;
+    }
+}
+
 function parseTextCSV(text) {
     if (typeof text !== "string") return // used for autocopmletions
     let coordMap = new Map() // used to shadow repetetive values
-    
-    text.split(/(?:\n)|(?:\r\n)/) // seperate rows using regex
-    .forEach(row => { // parse data into a list of coordinates
-        // this might set numbers as NaN when string is given
-        let [x, y] = row.split(',').map(val => parseFloat(val))
-        // won't save if invalid
-        if (isInvalidNum(x)) return
 
-        coordMap.set(x, y)
-    })
+    text.split(/(?:\n)|(?:\r\n)/) // seperate rows using regex
+        .forEach(row => { // parse data into a list of coordinates
+            // this might set numbers as NaN when string is given
+            let [x, y] = row.split(',').map(val => parseFloat(val))
+            // won't save if invalid
+            if (isInvalidNum(x)) return
+
+            coordMap.set(x, y)
+        })
     // parse the entries to array because it's an iterator
     return Array.from(coordMap.entries())
 }
@@ -59,15 +80,19 @@ function sortCoords() {
 function drawGraph() {
     // if we don't have at least 2 points we can't draw a graph
     if (coords.length < 2) {
+        // make sure to hide the title
+        graphTitle.textContent = '';
         return;
     }
+
+    graphTitle.textContent = graphProperties.graphTitle
 
     // clear the canvas
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // draw a line connecting all the points
-    ctx.strokeStyle = '#FF0000'
+    ctx.strokeStyle = graphProperties.lineColor
     const firstPoint = coords[0]
     ctx.moveTo(...convertPointToCanvasSpace(firstPoint))
     for (const point of coords.slice(1)) {

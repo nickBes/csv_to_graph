@@ -3,11 +3,19 @@
 <head>
     <title>GraphToCSV</title>
     <script src="index.js" defer></script>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <form>
         <input name="file" accept=".csv" type="file"/>
     </form>
+    <form id="graphPropertiesForm">
+        <label>Line Color: </label><input type="color" name="lineColor" value="#ff0000"/>
+        <label>Graph Title: </label><input type="text" name="graphTitle" value="Graph">
+        <label>X axis title: </label><input type="text" name="xTitle" value="X axis">
+        <label>Y axis title: </label><input type="text" name="yTitle" value="Y axis">
+    </form>
+    <div id="graphTitle"></div>
     <canvas width="400" height="400"></canvas>
 </body>
 </html>
