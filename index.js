@@ -3,9 +3,11 @@ const input = document.querySelector('input')
 
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
+const ctx = canvas.getContext('2d')
 
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
+const zoomSpeed = 1.1
 
 input.onchange = async () => {
     // if no files were supplied
@@ -56,6 +58,7 @@ function sortCoords() {
     coords.sort(([x1, _y1], [x2, _y2]) => x1 - x2)
 }
 
+
 function drawGraph() {
     // if we don't have at least 2 points we can't draw a graph
     if (coords.length < 2) {
@@ -63,10 +66,10 @@ function drawGraph() {
     }
 
     // clear the canvas
-    const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // draw a line connecting all the points
+    ctx.beginPath()
     ctx.strokeStyle = '#FF0000'
     const firstPoint = coords[0]
     ctx.moveTo(...convertPointToCanvasSpace(firstPoint))
@@ -74,4 +77,33 @@ function drawGraph() {
         ctx.lineTo(...convertPointToCanvasSpace(point))
     }
     ctx.stroke()
+    ctx.closePath()
+}
+
+canvas.onmousemove = event => {
+    if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
+    if (event.buttons != 1) return // return if haven't clicked
+
+    // transform the context's matrix as per the movement 
+    // not using ctx.translate() because it changes the
+    // matrix for clearing the canvas which leaves trails
+    coords = coords.map(([x, y]) => [x + event.movementX, y - event.movementY])
+    drawGraph()
+}
+
+canvas.onwheel = event => {
+    if (!(event instanceof WheelEvent) || !coords) return // return for invalid cases
+
+    const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY)
+
+    const scaleOffsetX = (zoomSpeed - 1) * event.offsetX
+    const scaleOffsetY = (zoomSpeed - 1) * event.offsetY
+
+
+    console.log(event.offsetX, event.offsetY)
+    console.log(zoomFactor)
+    coords = coords.map(([x,y]) => [x * zoomFactor - scaleOffsetX, y * zoomFactor - scaleOffsetY])
+    // console.log(event.speed)
+    // ctx.scale(-speed, -speed)
+    drawGraph()
 }
