@@ -94,16 +94,18 @@ canvas.onmousemove = event => {
 canvas.onwheel = event => {
     if (!(event instanceof WheelEvent) || !coords) return // return for invalid cases
 
+    // translates the scrolled delta Y into a positive number n
+    // n < 0 when scrolling down and n > 0 when scrolling up
     const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY)
 
-    const scaleOffsetX = (zoomSpeed - 1) * event.offsetX
-    const scaleOffsetY = (zoomSpeed - 1) * event.offsetY
+    // calculating the distance of the zoomed point before and after scaling
+    // to adjust the graph so the zoomed in point will stay in the same location
+    // in the cannvas
+    const scaleOffsetX = (zoomFactor - 1) * event.offsetX
+    const scaleOffsetY = (zoomFactor - 1) * event.offsetY
 
-
-    console.log(event.offsetX, event.offsetY)
-    console.log(zoomFactor)
+    // the new points scaled up and substracted by the distance between the zoomed point before and after scaling
+    // which means that the zoomed into point will be in the same coords before zooming
     coords = coords.map(([x,y]) => [x * zoomFactor - scaleOffsetX, y * zoomFactor - scaleOffsetY])
-    // console.log(event.speed)
-    // ctx.scale(-speed, -speed)
     drawGraph()
 }
