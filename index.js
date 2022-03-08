@@ -95,12 +95,12 @@ canvas.onwheel = event => {
     if (!(event instanceof WheelEvent) || !coords) return // return for invalid cases
 
     // translates the scrolled delta Y into a positive number n
-    // n < 0 when scrolling down and n > 0 when scrolling up
+    // 0 < n < 1 when scrolling down and n > 1 when scrolling up
     const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY)
 
     // calculating the distance of the zoomed point before and after scaling
     // to adjust the graph so the zoomed in point will stay in the same location
-    // in the cannvas
+    // on the canvas
     const scaleOffsetX = (zoomFactor - 1) * event.offsetX
     const scaleOffsetY = (zoomFactor - 1) * event.offsetY
 
