@@ -3,9 +3,11 @@ const input = document.querySelector('input')
 
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
+const ctx = canvas.getContext('2d')
 
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
+const zoomSpeed = 1.1
 
 input.onchange = async () => {
     // if no files were supplied
@@ -33,7 +35,9 @@ function parseTextCSV(text) {
         // won't save if invalid
         if (isInvalidNum(x)) return
 
-        coordMap.set(x, y)
+        // will convert the points to canvas space once before rendering
+        // as it won't be used later
+        coordMap.set(...convertPointToCanvasSpace([x, y]))
     })
     // parse the entries to array because it's an iterator
     return Array.from(coordMap.entries())
@@ -56,6 +60,7 @@ function sortCoords() {
     coords.sort(([x1, _y1], [x2, _y2]) => x1 - x2)
 }
 
+
 function drawGraph() {
     // if we don't have at least 2 points we can't draw a graph
     if (coords.length < 2) {
@@ -63,15 +68,47 @@ function drawGraph() {
     }
 
     // clear the canvas
-    const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // draw a line connecting all the points
+    ctx.beginPath()
     ctx.strokeStyle = '#FF0000'
     const firstPoint = coords[0]
-    ctx.moveTo(...convertPointToCanvasSpace(firstPoint))
+    ctx.moveTo(...firstPoint)
     for (const point of coords.slice(1)) {
-        ctx.lineTo(...convertPointToCanvasSpace(point))
+        ctx.lineTo(...point)
     }
     ctx.stroke()
+    ctx.closePath()
+}
+
+canvas.onmousemove = event => {
+    if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
+    if (event.buttons != 1) return // return if haven't clicked
+
+    // transform the context's matrix as per the movement 
+    // not using ctx.translate() because it changes the
+    // matrix for clearing the canvas which leaves trails
+    coords = coords.map(([x, y]) => [x + event.movementX, y + event.movementY])
+    drawGraph()
+}
+
+canvas.onwheel = event => {
+    if (!(event instanceof WheelEvent) || !coords) return // return for invalid cases
+
+    // translates the scrolled delta Y into a positive number n
+    // 0 < n < 1 when scrolling down and n > 1 when scrolling up
+
+    const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY) // using Math.sign to equal speed for all devices
+
+    // calculating the distance of the zoomed point before and after scaling
+    // to adjust the graph so the zoomed in point will stay in the same location
+    // on the canvas
+    const scaleOffsetX = (zoomFactor - 1) * event.offsetX
+    const scaleOffsetY = (zoomFactor - 1) * event.offsetY
+
+    // the new points scaled up and substracted by the distance between the zoomed point before and after scaling
+    // which means that the zoomed into point will be in the same coords before zooming
+    coords = coords.map(([x,y]) => [x * zoomFactor - scaleOffsetX, y * zoomFactor - scaleOffsetY])
+    drawGraph()
 }
