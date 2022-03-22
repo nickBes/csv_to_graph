@@ -35,7 +35,9 @@ function parseTextCSV(text) {
         // won't save if invalid
         if (isInvalidNum(x)) return
 
-        coordMap.set(x, y)
+        // will convert the points to canvas space once before rendering
+        // as it won't be used later
+        coordMap.set(...convertPointToCanvasSpace([x, y]))
     })
     // parse the entries to array because it's an iterator
     return Array.from(coordMap.entries())
@@ -72,9 +74,9 @@ function drawGraph() {
     ctx.beginPath()
     ctx.strokeStyle = '#FF0000'
     const firstPoint = coords[0]
-    ctx.moveTo(...convertPointToCanvasSpace(firstPoint))
+    ctx.moveTo(...firstPoint)
     for (const point of coords.slice(1)) {
-        ctx.lineTo(...convertPointToCanvasSpace(point))
+        ctx.lineTo(...point)
     }
     ctx.stroke()
     ctx.closePath()
@@ -87,7 +89,7 @@ canvas.onmousemove = event => {
     // transform the context's matrix as per the movement 
     // not using ctx.translate() because it changes the
     // matrix for clearing the canvas which leaves trails
-    coords = coords.map(([x, y]) => [x + event.movementX, y - event.movementY])
+    coords = coords.map(([x, y]) => [x + event.movementX, y + event.movementY])
     drawGraph()
 }
 
@@ -96,7 +98,8 @@ canvas.onwheel = event => {
 
     // translates the scrolled delta Y into a positive number n
     // 0 < n < 1 when scrolling down and n > 1 when scrolling up
-    const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY)
+
+    const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY) // using Math.sign to equal speed for all devices
 
     // calculating the distance of the zoomed point before and after scaling
     // to adjust the graph so the zoomed in point will stay in the same location
