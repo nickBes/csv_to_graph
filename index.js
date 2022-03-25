@@ -28,6 +28,7 @@ input.onchange = async () => {
         const text = await file.text()
         coords = parseTextCSV(text)
         sortCoords()
+        chooseInitialZoomValue()
         drawGraph()
     }
     input.value = ""
@@ -86,6 +87,41 @@ function sortCoords() {
     coords.sort(([x1, _y1], [x2, _y2]) => x1 - x2)
 }
 
+// chooses an initial zoom value which fits the entire graph inside of the canvas.
+function chooseInitialZoomValue() {
+    // the desired zoom value to make the whole width of the graph fit inside the canvas.
+    // the last point is the right most point so we can use it to find the width of the graph.
+    const widthZoomValue = canvas.width / coords[coords.length - 1][0];
+
+    // the height of the heighest point
+    const maxPointHeight = Math.max(...coords.map(([_x, y]) => {
+        // the y value is the distance from the top, to find the height we want the distance
+        // from the bottom
+        return canvas.height - y
+    }))
+    // the desired zoom value to make the whole height of the graph fit inside the canvas.
+    const heightZoomValue = canvas.height / maxPointHeight
+
+    // we want to choose the smaller one of the 2 zoom values that we found so that both the width 
+    // and the height fit.
+    const zoomValue = Math.min(widthZoomValue, heightZoomValue)
+
+    coords = coords.map(([x, y]) => {
+        // to zoom the y coordinates we want to multiply the height of each point.
+        // y coordinates in canvas space are the distance from the top, we want the hight,
+        // which is the distance from the bottom.
+        const height = canvas.height - y;
+        // multiply the height to find the new height.
+        const newHeight = height * zoomValue;
+        // convert the height back to a y coordinate in canvas space.
+        const newY = canvas.height - newHeight;
+
+        // for the x we can just multiply because it's the same for canvas space and graph space.
+        const newX = x * zoomValue;
+
+        return [newX, newY]
+    })
+}
 
 function drawGraph() {
     // if we don't have at least 2 points we can't draw a graph
