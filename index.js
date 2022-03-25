@@ -11,6 +11,7 @@ const graphTitle = document.querySelector('#graphTitle')
 
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
+let origin;
 let graphProperties = {};
 
 // load the default graphProperties
@@ -38,7 +39,7 @@ graphPropertiesForm.oninput = () => {
 }
 
 // updates the graphProperties object according to the form data
-function updateGraphProperties(){
+function updateGraphProperties() {
     const formData = new FormData(graphPropertiesForm);
     for (let [key, value] of formData) {
         graphProperties[key] = value;
@@ -50,16 +51,20 @@ function parseTextCSV(text) {
     let coordMap = new Map() // used to shadow repetetive values
 
     text.split(/(?:\n)|(?:\r\n)/) // seperate rows using regex
-    .forEach(row => { // parse data into a list of coordinates
-        // this might set numbers as NaN when string is given
-        let [x, y] = row.split(',').map(val => parseFloat(val))
-        // won't save if invalid
-        if (isInvalidNum(x)) return
+        .forEach(row => { // parse data into a list of coordinates
+            // this might set numbers as NaN when string is given
+            let [x, y] = row.split(',').map(val => parseFloat(val))
+            // won't save if invalid
+            if (isInvalidNum(x)) return
 
-        // will convert the points to canvas space once before rendering
-        // as it won't be used later
-        coordMap.set(...convertPointToCanvasSpace([x, y]))
-    })
+            // will convert the points to canvas space once before rendering
+            // as it won't be used later
+            coordMap.set(...convertPointToCanvasSpace([x, y]))
+
+            // the origin for graphs is expected to be at the bottom left, 
+            // and in canvas units the bottom left is represented as the following:
+            origin = [0, canvas.height]
+        })
     // parse the entries to array because it's an iterator
     return Array.from(coordMap.entries())
 }
@@ -105,16 +110,45 @@ function drawGraph() {
     }
     ctx.stroke()
     ctx.closePath()
+
+    drawAxes()
+}
+
+// draws a line from point a to point b
+function drawLine(a, b) {
+    ctx.beginPath()
+    ctx.moveTo(...a)
+    ctx.lineTo(...b)
+    ctx.stroke()
+    ctx.closePath()
+}
+
+function drawAxes() {
+    let [originX, originY] = origin;
+
+    ctx.strokeStyle = '#000000'
+
+    // draw the y axis
+    drawLine([originX, 0], [originX, canvas.height])
+
+    // draw the x axis
+    drawLine([0, originY], [canvas.width, originY])
 }
 
 canvas.onmousemove = event => {
     if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
     if (event.buttons != 1) return // return if haven't clicked
 
+    function movePoint([x, y]) {
+        return [x + event.movementX, y + event.movementY]
+    }
+
     // transform the context's matrix as per the movement 
     // not using ctx.translate() because it changes the
     // matrix for clearing the canvas which leaves trails
-    coords = coords.map(([x, y]) => [x + event.movementX, y + event.movementY])
+    coords = coords.map(movePoint)
+    origin = movePoint(origin)
+
     drawGraph()
 }
 
@@ -132,8 +166,14 @@ canvas.onwheel = event => {
     const scaleOffsetX = (zoomFactor - 1) * event.offsetX
     const scaleOffsetY = (zoomFactor - 1) * event.offsetY
 
+
+    function scalePoint([x, y]) {
+        return [x * zoomFactor - scaleOffsetX, y * zoomFactor - scaleOffsetY]
+    }
+
     // the new points scaled up and substracted by the distance between the zoomed point before and after scaling
     // which means that the zoomed into point will be in the same coords before zooming
-    coords = coords.map(([x,y]) => [x * zoomFactor - scaleOffsetX, y * zoomFactor - scaleOffsetY])
+    coords = coords.map(scalePoint)
+    origin = scalePoint(origin)
     drawGraph()
 }
