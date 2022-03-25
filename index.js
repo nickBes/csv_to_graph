@@ -61,6 +61,8 @@ function parseTextCSV(text) {
             // as it won't be used later
             coordMap.set(...convertPointToCanvasSpace([x, y]))
 
+            // the origin for graphs is expected to be at the bottom left, 
+            // and in canvas units the bottom left is represented as the following:
             origin = [0, canvas.height]
         })
     // parse the entries to array because it's an iterator
@@ -112,24 +114,25 @@ function drawGraph() {
     drawAxes()
 }
 
+// draws a line from point a to point b
+function drawLine(a, b) {
+    ctx.beginPath()
+    ctx.moveTo(...a)
+    ctx.lineTo(...b)
+    ctx.stroke()
+    ctx.closePath()
+}
+
 function drawAxes() {
     let [originX, originY] = origin;
 
     ctx.strokeStyle = '#000000'
 
     // draw the y axis
-    ctx.beginPath()
-    ctx.moveTo(originX, 0);
-    ctx.lineTo(originX, canvas.height);
-    ctx.stroke()
-    ctx.closePath()
+    drawLine([originX, 0], [originX, canvas.height])
 
     // draw the x axis
-    ctx.beginPath()
-    ctx.moveTo(0, originY);
-    ctx.lineTo(canvas.width, originY);
-    ctx.stroke()
-    ctx.closePath()
+    drawLine([0, originY], [canvas.width, originY])
 }
 
 canvas.onmousemove = event => {
