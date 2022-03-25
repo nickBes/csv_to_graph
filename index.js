@@ -124,15 +124,50 @@ function drawLine(a, b) {
 }
 
 function drawAxes() {
+
     let [originX, originY] = origin;
 
+    // all the axis and their titles are black
     ctx.strokeStyle = '#000000'
+
+    // setup for the axis titles
+    ctx.textBaseline = 'middle'
+    ctx.font = `17px Arial`
 
     // draw the y axis
     drawLine([originX, 0], [originX, canvas.height])
 
+    // draw the title for the y axis
+    const yTitle = graphProperties['yTitle'];
+    ctx.save()
+    ctx.rotate(-Math.PI / 2)
+    const yTitleWidth = ctx.measureText(yTitle).width;
+    if (yTitleWidth >= originY) {
+        ctx.textAlign = 'left'
+        ctx.fillText(yTitle, -canvas.height, originX)
+    } else {
+        ctx.textAlign = 'right'
+        ctx.fillText(yTitle, 0, originX)
+    }
+    ctx.restore()
+
+
     // draw the x axis
     drawLine([0, originY], [canvas.width, originY])
+
+    // draw the title for the x axis
+    const xTitle = graphProperties['xTitle'];
+    ctx.save()
+    const xTitleWidth = ctx.measureText(xTitle).width;
+    const spaceLeftRightToYAxis = canvas.width - originX;
+    if (xTitleWidth >= spaceLeftRightToYAxis) {
+        ctx.textAlign = 'left'
+        ctx.fillText(xTitle, 0, originY)
+    } else {
+        ctx.textAlign = 'right'
+        ctx.fillText(xTitle, canvas.width, originY)
+    }
+    ctx.restore()
 }
 
 canvas.onmousemove = event => {
