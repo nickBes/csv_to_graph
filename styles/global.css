@@ -19,13 +19,29 @@ a, a:hover, a:focus, a:active {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.spacer {
+    margin: auto;
 }
 
 #navbar nav {
     display: flex;
-    justify-content: flex-end;
     padding: 2vmin;
     background-color: lavenderblush;
+}
+
+#navbar nav > h1 {
+    margin: 0%;
+}
+
+#menu-box {
+    position: absolute;
 }
 
 #menu {
@@ -35,4 +51,14 @@ a, a:hover, a:focus, a:active {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    gap: 1vmin;
+    width: 10vw;
+}
+
+#menu > li {
+    color: black;
+}
+
+#menu > li:hover {
+    color: red;
 }
