@@ -139,9 +139,17 @@ function drawAxes() {
 
     // draw the title for the y axis
     const yTitle = graphProperties['yTitle'];
+    // save the current transformation of the context so that we don't mess up further uses of it. the transformation
+    // is restored when calling the `restore` method on the context.
     ctx.save()
     ctx.rotate(-Math.PI / 2)
     const yTitleWidth = ctx.measureText(yTitle).width;
+    // if we can draw the y title above the x axis then we want to do that, but if we don't have enought space 
+    // to draw it above the x axis, we want to draw it below it. the text is drawn with a 90 degree angle, so the 
+    // width of it represents its hight when drawn to the canvas. thus we need to check if its hight when drawn is 
+    // bigger than `originY` which is the space from the top of the screen to the x axis. If  it's bigger then we 
+    // don't have enough space and we should draw it below, otherwise we do have enough space and we should draw it
+    // above the x axis.
     if (yTitleWidth >= originY) {
         ctx.textAlign = 'left'
         ctx.fillText(yTitle, -canvas.height, originX)
@@ -149,6 +157,7 @@ function drawAxes() {
         ctx.textAlign = 'right'
         ctx.fillText(yTitle, 0, originX)
     }
+    // restore the transformation of the context before the rotation.
     ctx.restore()
 
 
@@ -157,8 +166,12 @@ function drawAxes() {
 
     // draw the title for the x axis
     const xTitle = graphProperties['xTitle'];
-    ctx.save()
     const xTitleWidth = ctx.measureText(xTitle).width;
+    // if we can draw the x title to the right of the y axis we want to do that, but if we don't have enough space
+    // to draw it to the right of the y axis, we want to draw it to the left of it. so we need to find the space from
+    // the right of the screen to the y axis, and check if we have enough space for the width of the x title there.
+    // if the x title width is bigger than the available space, then we should draw it to the left of the y axis, 
+    // otherwise if we have enough space we draw it to the right of the y axis.
     const spaceLeftRightToYAxis = canvas.width - originX;
     if (xTitleWidth >= spaceLeftRightToYAxis) {
         ctx.textAlign = 'left'
@@ -167,7 +180,6 @@ function drawAxes() {
         ctx.textAlign = 'right'
         ctx.fillText(xTitle, canvas.width, originY)
     }
-    ctx.restore()
 }
 
 canvas.onmousemove = event => {
