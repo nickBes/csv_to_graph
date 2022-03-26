@@ -1,5 +1,6 @@
 // we have only one input so we can use querySelector
-const input = document.querySelector('input')
+const csvInput = document.querySelector('#csv')
+const table = document.getElementById('raw-data')
 
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
@@ -18,19 +19,36 @@ let graphProperties = {};
 updateGraphProperties()
 const zoomSpeed = 1.1
 
-input.onchange = async () => {
+csvInput.onchange = async () => {
     // if no files were supplied
-    if (!input.files || input.files.length == 0) return;
+    if (!csvInput.files || csvInput.files.length == 0) return;
 
-    const file = input.files[0];
+    const file = csvInput.files[0];
 
     if (file instanceof File) {
         const text = await file.text()
         coords = parseTextCSV(text)
         sortCoords()
+        addCoordsToRawTable()
         drawGraph()
     }
-    input.value = ""
+    csvInput.value = ""
+}
+
+function addCoordsToRawTable() {
+    table.innerHTML = ''
+    coords.forEach(([x,y]) => {
+        let xTd = document.createElement('td')
+        let yTd = document.createElement('td')
+        let tr = document.createElement('tr')
+
+        tr.appendChild(xTd)
+        tr.appendChild(yTd)
+        table.appendChild(tr)
+
+        xTd.innerText = x
+        yTd.innerText = y
+    })
 }
 
 graphPropertiesForm.oninput = () => {
