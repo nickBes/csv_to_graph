@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GraphToCSV</title>
+    <script src="./scripts/graph.js" defer></script>
+    <script src="./scripts/global.js" defer></script>
+    <link rel="stylesheet" href="./styles/graph.css">
+    <link rel="stylesheet" href="./styles/global.css">
+</head>
+<body>
+    <!-- navbar component -->
+    <div id="navbar">
+        <nav>
+            <h1>GraphToCSV</h1>
+            <div class="spacer"></div>
+            <button id="menu-button">menu</button>
+        </nav>
+        <div id="menu-box" class="box hidden">
+            <ul id="menu">
+                <li><a href="./main.html">Home</a></li>
+                <li><a href="./about.html">About</a></li>
+                <li><a href="./tutorial.html">Tutorial</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- end of navbar -->
+    <form>
+        <input name="file" accept=".csv" type="file"/>
+    </form>
+    <form id="graph-form">
+        <label>Line Color: </label><input type="color" name="lineColor" value="#ff0000"/>
+        <label>Graph Title: </label><input type="text" name="graphTitle" value="Graph">
+        <label>X axis title: </label><input type="text" name="xTitle" value="X axis">
+        <label>Y axis title: </label><input type="text" name="yTitle" value="Y axis">
+    </form>
+    <div id="graph-title"></div>
+    <canvas style="border: 1px solid black;" width="400" height="400"></canvas>
+</body>
+</html>
