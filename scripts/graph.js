@@ -5,9 +5,9 @@ const input = document.querySelector('input')
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-const graphPropertiesForm = document.querySelector('#graphPropertiesForm')
+const graphPropertiesForm = document.querySelector('#graph-form')
 
-const graphTitle = document.querySelector('#graphTitle')
+const graphTitle = document.querySelector('#graph-title')
 
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
