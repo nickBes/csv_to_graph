@@ -24,16 +24,26 @@
         </div>
     </div>
     <!-- end of navbar -->
-    <form>
-        <input name="file" accept=".csv" type="file"/>
-    </form>
     <form id="graph-form">
         <label>Line Color: </label><input type="color" name="lineColor" value="#ff0000"/>
         <label>Graph Title: </label><input type="text" name="graphTitle" value="Graph">
         <label>X axis title: </label><input type="text" name="xTitle" value="X axis">
         <label>Y axis title: </label><input type="text" name="yTitle" value="Y axis">
+        <input id="csv" name="file" accept=".csv" type="file"/>
     </form>
     <div id="graph-title"></div>
     <canvas style="border: 1px solid black;" width="400" height="400"></canvas>
+    <details>
+        <summary>Raw Data</summary>
+        <table>
+            <tbody>
+                <tr>
+                    <th>X Values</th>
+                    <th>Y Values</th>
+                </tr>
+            </tbody>
+            <tbody id="raw-data"></tbody>
+        </table>
+    </details>
 </body>
 </html>
