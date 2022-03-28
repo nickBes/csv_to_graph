@@ -9,9 +9,6 @@ const graphPropertiesForm = document.querySelector('#graphPropertiesForm')
 
 const graphTitle = document.querySelector('#graphTitle')
 
-// the amount of extra space to include in the initial transformation near the axes.
-const initialTransformationAxesPadding = 10;
-
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
 let origin;
@@ -117,36 +114,6 @@ function foundBoundariesOfPoints(points) {
     return {left, right, top, bottom}
 }
 
-// makes sure that all of the given points are in the screen by zooming and moving the graph
-// the nonZoomablePoints are points that should also be included in the screen, but should not
-// be affected by the zoom.
-function includePointsInScreen(points) {
-    // found a boundary which contains all points
-    let boundaries = foundBoundariesOfPoints(points)
-
-    // find the dimensions of the boundary around all the points
-    const width = Math.abs(boundaries.right - boundaries.left);
-    const height = Math.abs(boundaries.bottom - boundaries.top);
-
-    // the desired zoom value to make the whole width of the boundary fit inside the canvas.
-    const widthZoomValue = canvas.width / width;
-
-    // the desired zoom value to make the whole height of the boundary fit inside the canvas.
-    const heightZoomValue = canvas.height / height
-
-    // we want to choose the smaller one of the 2 zoom values that we found so that both the width 
-    // and the height fit.
-    const zoomFactor = Math.min(widthZoomValue, heightZoomValue)
-
-    mapAllPoints((point) => zoomPoint(point, zoomFactor, origin))
-    points = points.map((point) => zoomPoint(point, zoomFactor, origin))
-
-    // move the points so that all of them are in the screen
-    const boundariesAfterZoom = foundBoundariesOfPoints(points)
-    const movement = [-boundariesAfterZoom.left, -(boundariesAfterZoom.bottom - canvas.height)]
-    mapAllPoints((point) => movePoint(point, movement))
-}
-
 // zooms the given point by the given zoom factor according to the given zoom origin
 function zoomPoint(point, zoomFactor, zoomOrigin) {
     const [originX, originY] = zoomOrigin;
@@ -171,11 +138,33 @@ function mapAllPoints(fn) {
 
 // chooses an initial zoom value which fits the entire graph inside of the canvas.
 function chooseInitialTransformation() {
-    // make sure that all the points on the graph, and the origin, are in the screen
-    includePointsInScreen([...coords, origin])
+    // found a boundary which contains all points including the origin
+    let boundaries = foundBoundariesOfPoints([...coords, origin])
 
-    // add some padding around the axes so that they are visible
-    addPaddingAroundAxes()
+    // find the dimensions of the boundary around all the points and the origin
+    const width = boundaries.right - boundaries.left;
+    const height = boundaries.bottom - boundaries.top;
+
+    // the desired zoom value to make the whole width of the boundary fit inside the canvas.
+    const widthZoomValue = canvas.width / width;
+
+    // the desired zoom value to make the whole height of the boundary fit inside the canvas.
+    const heightZoomValue = canvas.height / height
+
+    // we want to choose the smaller one of the 2 zoom values that we found so that both the width 
+    // and the height fit.
+    const zoomFactor = Math.min(widthZoomValue, heightZoomValue)
+
+    mapAllPoints((point) => zoomPoint(point, zoomFactor, origin))
+
+    // move the points so that all of them are in the screen.
+    //
+    // to do that we should find the new boundaries after zooming the points, and move all points to make
+    // the left boundary 0, which is the left of the canvas, and move all points to make the bottom boundary 
+    // equal to canvas.height, which is the bottom of the graph.
+    const boundariesAfterZoom = foundBoundariesOfPoints([...coords, origin])
+    const movement = [-boundariesAfterZoom.left, -(boundariesAfterZoom.bottom - canvas.height)]
+    mapAllPoints((point) => movePoint(point, movement))
 }
 
 function drawGraph() {
