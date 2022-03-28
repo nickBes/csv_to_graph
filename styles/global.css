@@ -62,3 +62,24 @@ a, a:hover, a:focus, a:active {
 #menu > li:hover {
     color: red;
 }
+
+#footer {
+    background-color: azure;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1vmin;
+    padding: 2vmin;
+}
+
+#footer #title {
+    margin: 0%;
+}
+
+#footer #text {
+    display: flex;
+    gap: 1vmin;
+    justify-content: center;
+    align-items: center;
+}
