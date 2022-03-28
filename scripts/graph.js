@@ -1,13 +1,14 @@
 // we have only one input so we can use querySelector
-const input = document.querySelector('input')
+const csvInput = document.querySelector('#csv')
+const table = document.getElementById('raw-data')
 
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-const graphPropertiesForm = document.querySelector('#graphPropertiesForm')
+const graphPropertiesForm = document.querySelector('#graph-form')
 
-const graphTitle = document.querySelector('#graphTitle')
+const graphTitle = document.querySelector('#graph-title')
 
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
@@ -18,19 +19,37 @@ let graphProperties = {};
 updateGraphProperties()
 const zoomSpeed = 1.1
 
-input.onchange = async () => {
+csvInput.onchange = async () => {
     // if no files were supplied
-    if (!input.files || input.files.length == 0) return;
+    if (!csvInput.files || csvInput.files.length == 0) return;
 
-    const file = input.files[0];
+    const file = csvInput.files[0];
 
     if (file instanceof File) {
         const text = await file.text()
         coords = parseTextCSV(text)
         sortCoords()
+        addCoordsToRawTable()
+        chooseInitialTransformation()
         drawGraph()
     }
-    input.value = ""
+    csvInput.value = ""
+}
+
+function addCoordsToRawTable() {
+    table.innerHTML = ''
+    coords.forEach(([x,y]) => {
+        let xTd = document.createElement('td')
+        let yTd = document.createElement('td')
+        let tr = document.createElement('tr')
+
+        tr.appendChild(xTd)
+        tr.appendChild(yTd)
+        table.appendChild(tr)
+
+        xTd.innerText = x
+        yTd.innerText = y
+    })
 }
 
 graphPropertiesForm.oninput = () => {
@@ -86,6 +105,85 @@ function sortCoords() {
     coords.sort(([x1, _y1], [x2, _y2]) => x1 - x2)
 }
 
+// find the boundaries of the given points
+function foundBoundariesOfPoints(points) {
+    let [firstPointX, firstPointY] = points[0]
+    let left = firstPointX
+    let right = firstPointX
+    let top = firstPointY
+    let bottom = firstPointY
+
+    // skip the first point because we already used it
+    for (let [x, y] of points.slice(1)) {
+        if (x < left) {
+            left = x
+        }
+        if (x > right) {
+            right = x
+        }
+        if (y < top) {
+            top = y
+        }
+        if (y > bottom) {
+            bottom = y
+        }
+    }
+
+    return {left, right, top, bottom}
+}
+
+// zooms the given point by the given zoom factor according to the given zoom origin
+function zoomPoint(point, zoomFactor, zoomOrigin) {
+    const [originX, originY] = zoomOrigin;
+    const [x, y] = point;
+    let dx = x - originX;
+    let dy = y - originY;
+    return [originX + dx * zoomFactor, originY + dy * zoomFactor]
+}
+
+// moves the given point by the given movement
+function movePoint(point, movement) {
+    const [x, y] = point;
+    const [moveX, moveY] = movement
+    return [x + moveX, y + moveY]
+}
+
+// applies the given function to all points, including the origin.
+function mapAllPoints(fn) {
+    coords = coords.map(fn)
+    origin = fn(origin)
+}
+
+// chooses an initial zoom value which fits the entire graph inside of the canvas.
+function chooseInitialTransformation() {
+    // found a boundary which contains all points including the origin
+    let boundaries = foundBoundariesOfPoints([...coords, origin])
+
+    // find the dimensions of the boundary around all the points and the origin
+    const width = boundaries.right - boundaries.left;
+    const height = boundaries.bottom - boundaries.top;
+
+    // the desired zoom value to make the whole width of the boundary fit inside the canvas.
+    const widthZoomValue = canvas.width / width;
+
+    // the desired zoom value to make the whole height of the boundary fit inside the canvas.
+    const heightZoomValue = canvas.height / height
+
+    // we want to choose the smaller one of the 2 zoom values that we found so that both the width 
+    // and the height fit.
+    const zoomFactor = Math.min(widthZoomValue, heightZoomValue)
+
+    mapAllPoints((point) => zoomPoint(point, zoomFactor, origin))
+
+    // move the points so that all of them are in the screen.
+    //
+    // to do that we should find the new boundaries after zooming the points, and move all points to make
+    // the left boundary 0, which is the left of the canvas, and move all points to make the bottom boundary 
+    // equal to canvas.height, which is the bottom of the graph.
+    const boundariesAfterZoom = foundBoundariesOfPoints([...coords, origin])
+    const movement = [-boundariesAfterZoom.left, -(boundariesAfterZoom.bottom - canvas.height)]
+    mapAllPoints((point) => movePoint(point, movement))
+}
 
 function drawGraph() {
     // if we don't have at least 2 points we can't draw a graph
@@ -186,15 +284,8 @@ canvas.onmousemove = event => {
     if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
     if (event.buttons != 1) return // return if haven't clicked
 
-    function movePoint([x, y]) {
-        return [x + event.movementX, y + event.movementY]
-    }
-
-    // transform the context's matrix as per the movement 
-    // not using ctx.translate() because it changes the
-    // matrix for clearing the canvas which leaves trails
-    coords = coords.map(movePoint)
-    origin = movePoint(origin)
+    const movement = [event.movementX, event.movementY];
+    mapAllPoints((point) => movePoint(point, movement))
 
     drawGraph()
 }
@@ -206,21 +297,9 @@ canvas.onwheel = event => {
     // 0 < n < 1 when scrolling down and n > 1 when scrolling up
 
     const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY) // using Math.sign to equal speed for all devices
+    const zoomOrigin = [event.offsetX, event.offsetY]
 
-    // calculating the distance of the zoomed point before and after scaling
-    // to adjust the graph so the zoomed in point will stay in the same location
-    // on the canvas
-    const scaleOffsetX = (zoomFactor - 1) * event.offsetX
-    const scaleOffsetY = (zoomFactor - 1) * event.offsetY
+    mapAllPoints((point) => zoomPoint(point, zoomFactor, zoomOrigin))
 
-
-    function scalePoint([x, y]) {
-        return [x * zoomFactor - scaleOffsetX, y * zoomFactor - scaleOffsetY]
-    }
-
-    // the new points scaled up and substracted by the distance between the zoomed point before and after scaling
-    // which means that the zoomed into point will be in the same coords before zooming
-    coords = coords.map(scalePoint)
-    origin = scalePoint(origin)
     drawGraph()
 }
