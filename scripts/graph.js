@@ -1,6 +1,7 @@
 // we have only one input so we can use querySelector
 const csvInput = document.querySelector('#csv')
 const table = document.getElementById('raw-data')
+const lockButton = document.getElementById('lock')
 
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
@@ -30,15 +31,19 @@ csvInput.onchange = async () => {
         coords = parseTextCSV(text)
         sortCoords()
         addCoordsToRawTable()
-
         // after adding the coords to the table we can convert them to canvas space, which is 
         // what we will use from this point on.
         coords = coords.map(convertPointToCanvasSpace)
 
-        chooseInitialTransformation()
-        drawGraph()
+        lockOnGraph()
     }
     csvInput.value = ""
+}
+
+// locks the graph right into the canvas view
+function lockOnGraph() {
+    chooseInitialTransformation()
+    drawGraph()
 }
 
 function addCoordsToRawTable() {
@@ -295,10 +300,12 @@ canvas.onmousemove = event => {
     if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
     if (event.buttons != 1) return // return if haven't clicked
 
+    // move points according to mouse movement
     const movement = [event.movementX, event.movementY];
     mapAllPoints((point) => movePoint(point, movement))
 
     drawGraph()
+    manageLockButton()
 }
 
 canvas.onwheel = event => {
@@ -313,4 +320,16 @@ canvas.onwheel = event => {
     mapAllPoints((point) => zoomPoint(point, zoomFactor, zoomOrigin))
 
     drawGraph()
+    manageLockButton()
+}
+
+// will hide/show the lock button according to the graph view
+// inside the canvas
+function manageLockButton() {
+    const { bottom, right, left, top } = foundBoundariesOfPoints(coords)
+    if (right < 0 || left > canvas.width || bottom < 0 || top > canvas.height) { // if graph not in canvas view
+        lockButton.classList.remove('hidden') // show button
+    } else {
+        lockButton.classList.add('hidden') // hide button
+    }
 }
