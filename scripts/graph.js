@@ -30,6 +30,11 @@ csvInput.onchange = async () => {
         coords = parseTextCSV(text)
         sortCoords()
         addCoordsToRawTable()
+
+        // after adding the coords to the table we can convert them to canvas space, which is 
+        // what we will use from this point on.
+        coords = coords.map(convertPointToCanvasSpace)
+
         chooseInitialTransformation()
         drawGraph()
     }
@@ -38,7 +43,7 @@ csvInput.onchange = async () => {
 
 function addCoordsToRawTable() {
     table.innerHTML = ''
-    coords.forEach(([x,y]) => {
+    coords.forEach(([x, y]) => {
         let xTd = document.createElement('td')
         let yTd = document.createElement('td')
         let tr = document.createElement('tr')
@@ -78,7 +83,7 @@ function parseTextCSV(text) {
 
             // will convert the points to canvas space once before rendering
             // as it won't be used later
-            coordMap.set(...convertPointToCanvasSpace([x, y]))
+            coordMap.set(x, y)
 
             // the origin for graphs is expected to be at the bottom left, 
             // and in canvas units the bottom left is represented as the following:
@@ -186,6 +191,12 @@ function chooseInitialTransformation() {
 }
 
 function drawGraph() {
+    // if no graph was loaded then we can't draw a graph
+    if(!coords)
+    {
+        return
+    }
+
     // if we don't have at least 2 points we can't draw a graph
     if (coords.length < 2) {
         // make sure to hide the title
