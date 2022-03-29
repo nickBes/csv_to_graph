@@ -36,6 +36,7 @@ csvInput.onchange = async () => {
     csvInput.value = ""
 }
 
+// locks the graph right into the canvas view
 function lockOnGraph() {
     chooseInitialTransformation()
     drawGraph()
@@ -294,13 +295,7 @@ canvas.onmousemove = event => {
     mapAllPoints((point) => movePoint(point, movement))
 
     drawGraph()
-
-    const { bottom, right, left, top } = foundBoundariesOfPoints(coords)
-    if (right < 0 || left > canvas.width || bottom < 0 || top > canvas.height) { // if graph not in canvas view
-        lockButton.classList.remove('hidden') // show button
-    } else {
-        lockButton.classList.add('hidden') // hide button
-    }
+    manageLockButton()
 }
 
 canvas.onwheel = event => {
@@ -315,4 +310,16 @@ canvas.onwheel = event => {
     mapAllPoints((point) => zoomPoint(point, zoomFactor, zoomOrigin))
 
     drawGraph()
+    manageLockButton()
+}
+
+// will hide/show the lock button according to the graph view
+// inside the canvas
+function manageLockButton() {
+    const { bottom, right, left, top } = foundBoundariesOfPoints(coords)
+    if (right < 0 || left > canvas.width || bottom < 0 || top > canvas.height) { // if graph not in canvas view
+        lockButton.classList.remove('hidden') // show button
+    } else {
+        lockButton.classList.add('hidden') // hide button
+    }
 }
