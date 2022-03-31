@@ -1,9 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --black: #131200;
+    --gray: #1B1C18;
+    --white: #FEFAE0;
+    --cyan: #20A39E;
+    --orange: #fe5e41;
+    --font-family: 'Open Sans', sans-serif;
+}
+
 * {
     box-sizing: border-box;
+    font-family: var(--font-family);
 }
 
 body {
     margin: 0%;
+    background-color: var(--white);
 }
 
 a, a:hover, a:focus, a:active {
