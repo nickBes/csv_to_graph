@@ -2,6 +2,7 @@
 const csvInput = document.querySelector('#csv')
 const table = document.getElementById('raw-data')
 const lockButton = document.getElementById('lock')
+const canvasAreaElement = document.getElementById('canvas-area')
 
 // we have only one canvas so we can use querySelector
 const canvas = document.querySelector('canvas')
@@ -11,6 +12,8 @@ const graphPropertiesForm = document.querySelector('#graph-form')
 
 const graphTitle = document.querySelector('#graph-title')
 
+const zoomSpeed = 1.1
+
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
 let origin;
@@ -18,7 +21,9 @@ let graphProperties = {};
 
 // load the default graphProperties
 updateGraphProperties()
-const zoomSpeed = 1.1
+
+// sets up the resize observer to make sure the canvas's buffer size matches its size on the screen
+setupResizeObserver()
 
 csvInput.onchange = async () => {
     // if no files were supplied
@@ -38,6 +43,74 @@ csvInput.onchange = async () => {
         lockOnGraph()
     }
     csvInput.value = ""
+}
+
+graphPropertiesForm.oninput = () => {
+    updateGraphProperties()
+    drawGraph()
+}
+
+canvas.onwheel = event => {
+    if (!(event instanceof WheelEvent) || !coords) return // return for invalid cases
+
+    // translates the scrolled delta Y into a positive number n
+    // 0 < n < 1 when scrolling down and n > 1 when scrolling up
+
+    const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY) // using Math.sign to equal speed for all devices
+    const zoomOrigin = [event.offsetX, event.offsetY]
+
+    mapAllPoints((point) => zoomPoint(point, zoomFactor, zoomOrigin))
+
+    drawGraph()
+    manageLockButton()
+}
+
+let isDraggingCanvas = false;
+
+// when the user is dragging inside of the canvas we want to disable pointer events for everything else 
+// so that they don't interrupt with the user's drag. once the mouse is up we want to re-enable pointer 
+// events.
+canvas.onmousedown = () => {
+    isDraggingCanvas = true;
+    document.body.style.userSelect = 'none';
+}
+
+document.onmouseup = () => {
+    isDraggingCanvas = false;
+    document.body.style.userSelect = '';
+}
+
+document.onmousemove = event => {
+    if (isDraggingCanvas) {
+        if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
+        if (event.buttons != 1) return // return if haven't clicked
+
+        // move points according to mouse movement
+        const movement = [event.movementX, event.movementY];
+        mapAllPoints((point) => movePoint(point, movement))
+
+        drawGraph()
+        manageLockButton()
+    }
+}
+
+// sets up a resize observer that resizes the canvas's buffer according to the size of the
+// canvas on the screen.
+function setupResizeObserver() {
+    const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            canvas.width = entry.contentRect.width;
+            canvas.height = entry.contentRect.height;
+
+            // after resizing the canvas we should redraw to update the graph
+            drawGraph()
+
+            // also if the graph is now outside of the screen make sure to show the zoom 
+            // back button
+            manageLockButton()
+        }
+    })
+    resizeObserver.observe(canvasAreaElement)
 }
 
 // locks the graph right into the canvas view
@@ -60,11 +133,6 @@ function addCoordsToRawTable() {
         xTd.innerText = x
         yTd.innerText = y
     })
-}
-
-graphPropertiesForm.oninput = () => {
-    updateGraphProperties()
-    drawGraph()
 }
 
 // updates the graphProperties object according to the form data
@@ -197,8 +265,7 @@ function chooseInitialTransformation() {
 
 function drawGraph() {
     // if no graph was loaded then we can't draw a graph
-    if(!coords)
-    {
+    if (!coords) {
         return
     }
 
@@ -296,37 +363,15 @@ function drawAxes() {
     }
 }
 
-canvas.onmousemove = event => {
-    if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
-    if (event.buttons != 1) return // return if haven't clicked
-
-    // move points according to mouse movement
-    const movement = [event.movementX, event.movementY];
-    mapAllPoints((point) => movePoint(point, movement))
-
-    drawGraph()
-    manageLockButton()
-}
-
-canvas.onwheel = event => {
-    if (!(event instanceof WheelEvent) || !coords) return // return for invalid cases
-
-    // translates the scrolled delta Y into a positive number n
-    // 0 < n < 1 when scrolling down and n > 1 when scrolling up
-
-    const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY) // using Math.sign to equal speed for all devices
-    const zoomOrigin = [event.offsetX, event.offsetY]
-
-    mapAllPoints((point) => zoomPoint(point, zoomFactor, zoomOrigin))
-
-    drawGraph()
-    manageLockButton()
-}
-
 // will hide/show the lock button according to the graph view
 // inside the canvas
 function manageLockButton() {
-    const { bottom, right, left, top } = foundBoundariesOfPoints(coords)
+    // if no graph was loaded yet no need to do anything
+    if (!coords) {
+        return
+    }
+
+    const {bottom, right, left, top} = foundBoundariesOfPoints(coords)
     if (right < 0 || left > canvas.width || bottom < 0 || top > canvas.height) { // if graph not in canvas view
         lockButton.classList.remove('hidden') // show button
     } else {
