@@ -80,7 +80,7 @@ document.onmouseup = () => {
     document.body.style.userSelect = '';
 }
 
-document.onmousemove = event => {
+document.body.onmousemove = event => {
     if (isDraggingCanvas) {
         if (!(event instanceof MouseEvent) || !coords) return // return for invalid cases
         if (event.buttons != 1) return // return if haven't clicked
