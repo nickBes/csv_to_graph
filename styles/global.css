@@ -77,7 +77,7 @@ a, a:hover, a:focus, a:active {
     text-align: center;
     color: var(--white);
     font-weight: 600;
-    width: 15vmin;
+    width: 20vmin;
     padding: 1vmin;
     transition: .3s;
 }
