@@ -6,6 +6,7 @@
     --white: #FEFAE0;
     --cyan: #20A39E;
     --orange: #fe5e41;
+    --dark-orange: #da4025;
     --font-family: 'Open Sans', sans-serif;
 }
 
@@ -14,8 +15,9 @@
     font-family: var(--font-family);
 }
 
-body {
-    margin: 0%;
+body, html {
+    margin: 0;
+    padding: 0;
     background-color: var(--white);
 }
 
@@ -120,4 +122,19 @@ a, a:hover, a:focus, a:active {
     font-weight: 500;
     margin: 0%;
     font-size: .75rem;
+}
+
+.button {
+    background-color: var(--orange);
+    color: var(--white);
+    text-transform: uppercase;
+    padding: 1vmin;
+    border-radius: 1vmin;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.button:hover {
+    color: var(--white);
+    background-color: var(--dark-orange);
 }
