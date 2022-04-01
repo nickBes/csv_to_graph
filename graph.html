@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>GraphToCSV</title>
     <script src="./scripts/graph.js" defer></script>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="./styles/graph.css">
     <link rel="stylesheet" href="./styles/global.css">
 </head>
+
 <body>
     <!-- navbar component -->
     <div id="navbar">
@@ -24,36 +26,47 @@
         </div>
     </div>
     <!-- end of navbar -->
-    <form id="graph-form">
-        <label>Line Color: </label><input type="color" name="lineColor" value="#ff0000"/>
-        <label>Graph Title: </label><input type="text" name="graphTitle" value="Graph">
-        <label>X axis title: </label><input type="text" name="xTitle" value="X axis">
-        <label>Y axis title: </label><input type="text" name="yTitle" value="Y axis">
-        <input id="csv" name="file" accept=".csv" type="file"/>
-    </form>
-    <div id="graph-title"></div>
-    <canvas style="border: 1px solid black;" width="400" height="400"></canvas>
-    <button id="lock" class="hidden" onclick="lockOnGraph()">Zoom Back</button>
-    <details>
-        <summary>Raw Data</summary>
-        <table>
-            <tbody>
-                <tr>
-                    <th>X Values</th>
-                    <th>Y Values</th>
-                </tr>
-            </tbody>
-            <tbody id="raw-data"></tbody>
-        </table>
-    </details>
+    <div id="viewport">
+        <div id="canvas-area"></div>
+        <button id="lock" class="hidden" onclick="lockOnGraph()">Zoom Back</button>
+        <div id="graph-title"></div>
+        <div id="viewport-menu">
+            <form id="graph-form">
+                <label>Line Color: </label><input type="color" name="lineColor" value="#ff0000" />
+                <br>
+                <label>Graph Title: </label><input type="text" name="graphTitle" value="Graph">
+                <br>
+                <label>X axis title: </label><input type="text" name="xTitle" value="X axis">
+                <br>
+                <label>Y axis title: </label><input type="text" name="yTitle" value="Y axis">
+                <br>
+                <input id="csv" name="file" accept=".csv" type="file" />
+                <br>
+            </form>
+            <details>
+                <summary>Raw Data</summary>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>X Values</th>
+                            <th>Y Values</th>
+                        </tr>
+                    </tbody>
+                    <tbody id="raw-data"></tbody>
+                </table>
+            </details>
+        </div>
+        <canvas />
+    </div>
     <!-- footer component -->
     <footer id="footer">
         <h1 id="title">GraphToCSV</h1>
         <div id="text">
             <p>Contribute on</p>
-            <a href="https://github.com/nickBes/csv_to_graph"><img src="./public/github-icon.png"/></a>
+            <a href="https://github.com/nickBes/csv_to_graph"><img src="./public/github-icon.png" /></a>
         </div>
     </footer>
     <!-- end of footer -->
 </body>
+
 </html>
