@@ -30,7 +30,12 @@
         <div id="canvas-area"></div>
         <button id="lock" class="hidden" onclick="lockOnGraph()">Zoom Back</button>
         <div id="graph-title"></div>
+		<button id="open-menu" class="hidden" onclick="openMenu()">Menu</button>
         <div id="viewport-menu">
+			<div class="viewport-menu-title-bar">
+				<div class="viewport-menu-title">Menu</div>
+				<button class="menu-close" onclick="closeMenu()">x</button>
+			</div>
             <form id="graph-form">
                 <label>Line Color: </label><input type="color" name="lineColor" value="#ff0000" />
                 <br>

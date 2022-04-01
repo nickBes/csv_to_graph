@@ -9,15 +9,20 @@ const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
 const graphPropertiesForm = document.querySelector('#graph-form')
-
 const graphTitle = document.querySelector('#graph-title')
+const viewportMenu = document.getElementById('viewport-menu')
+const openMenuBtn = document.getElementById('open-menu')
 
 const zoomSpeed = 1.1
 
 // An array of coordinates in this format: [[x,y], [x1, y1]...]
 let coords;
+
 let origin;
+
 let graphProperties = {};
+
+let isDraggingCanvas = false;
 
 // load the default graphProperties
 updateGraphProperties()
@@ -65,8 +70,6 @@ canvas.onwheel = event => {
     manageLockButton()
 }
 
-let isDraggingCanvas = false;
-
 // when the user is dragging inside of the canvas we want to disable pointer events for everything else 
 // so that they don't interrupt with the user's drag. once the mouse is up we want to re-enable pointer 
 // events.
@@ -92,6 +95,16 @@ document.body.onmousemove = event => {
         drawGraph()
         manageLockButton()
     }
+}
+
+function closeMenu(){
+	viewportMenu.classList.add('hidden')
+	openMenuBtn.classList.remove('hidden')
+}
+
+function openMenu(){
+	openMenuBtn.classList.add('hidden')
+	viewportMenu.classList.remove('hidden')
 }
 
 // sets up a resize observer that resizes the canvas's buffer according to the size of the
