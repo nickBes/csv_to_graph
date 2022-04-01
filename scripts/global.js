@@ -1,9 +1,24 @@
 const menuBox = document.getElementById('menu-box')
 const menuButton = document.getElementById('menu-button')
 
+const [menuStartFrame, menuEndFrame] = [
+    {opacity: 0, transform: 'translate(0px, -25%)'},
+    {opacity: 1, transform: 'translate(0px, 0px)'}
+]
+const menuAnimationConfig = {
+    duration: 200,
+    iterations: 1,
+    easing: 'ease-in'
+}
+
+async function animateOutMenu() {
+    await menuBox.animate([menuEndFrame, menuStartFrame], menuAnimationConfig).finished
+    menuBox.classList.add('hidden')
+}
+
 window.onclick = () => {
     if (!menuBox.classList.contains('hidden')) {
-        menuBox.classList.add('hidden')
+        animateOutMenu()
     }
 }
 
@@ -15,7 +30,13 @@ menuButton.onclick = (event) => {
     event.stopPropagation()
 
     const buttonRect = menuButton.getBoundingClientRect()
-    menuBox.classList.toggle('hidden')
+    // toggles between the animation states
+    if (!menuBox.classList.contains('hidden')) {
+        animateOutMenu()
+    } else {
+        menuBox.classList.remove('hidden')
+        menuBox.animate([menuStartFrame, menuEndFrame], menuAnimationConfig)
+    }
 
     // puts the menu box in a relative location to the menu button
     const menuBoxWidth = menuBox.getBoundingClientRect().width

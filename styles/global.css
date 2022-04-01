@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --black: #131200;
-    --gray: #1B1C18;
+    --black: #0f0f07;
+    --gray: #1a1a1a;
     --white: #FEFAE0;
     --cyan: #20A39E;
     --orange: #fe5e41;
@@ -27,14 +27,14 @@ a, a:hover, a:focus, a:active {
 }
 
 .box {
-    box-shadow: 0px 0px 5px 2px lightgray;
     display: block;
     width: fit-content;
-    padding: 2vmin;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: var(--black);
+    border-radius: 1vmin;
+    box-shadow: 1vmin .5vmin 2vmin -1vmin var(--gray);
 }
 
 .hidden {
@@ -45,14 +45,20 @@ a, a:hover, a:focus, a:active {
     margin: auto;
 }
 
+#navbar {
+    padding-left: 3vmin;
+    padding-right: 3vmin;
+}
+
 #navbar nav {
     display: flex;
     padding: 2vmin;
-    background-color: lavenderblush;
+    border-bottom: 1px solid var(--gray);
 }
 
 #navbar nav > h1 {
     margin: 0%;
+    color: var(--gray);
 }
 
 #menu-box {
@@ -66,26 +72,42 @@ a, a:hover, a:focus, a:active {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 1vmin;
-    width: 10vw;
 }
 
 #menu > li {
-    color: black;
+    display: inline;
+    text-align: center;
+    color: var(--white);
+    font-weight: 600;
+    width: 20vmin;
+    padding: 1vmin;
+    transition: .3s;
+}
+
+#menu a {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    gap: 1vmin;
+}
+
+#menu span {
+    color: var(--white);
 }
 
 #menu > li:hover {
-    color: red;
+    color: var(--white);
+    background-color: var(--gray);
 }
 
 #footer {
-    background-color: azure;
+    background-color: var(--black);
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
-    gap: 1vmin;
+    justify-content: center;
     padding: 2vmin;
+    color: var(--white);
 }
 
 #footer #title {
@@ -94,9 +116,12 @@ a, a:hover, a:focus, a:active {
 
 #footer #text {
     display: flex;
-    gap: 1vmin;
+    gap: .5vmin;
     justify-content: center;
     align-items: center;
+    font-weight: 500;
+    margin: 0%;
+    font-size: .75rem;
 }
 
 .button {
