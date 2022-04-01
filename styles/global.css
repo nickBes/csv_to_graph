@@ -99,13 +99,13 @@ a, a:hover, a:focus, a:active {
 }
 
 #footer {
-    background-color: azure;
+    background-color: var(--black);
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
-    gap: 1vmin;
+    justify-content: center;
     padding: 2vmin;
+    color: var(--white);
 }
 
 #footer #title {
@@ -114,7 +114,10 @@ a, a:hover, a:focus, a:active {
 
 #footer #text {
     display: flex;
-    gap: 1vmin;
+    gap: .5vmin;
     justify-content: center;
     align-items: center;
+    font-weight: 500;
+    margin: 0%;
+    font-size: .75rem;
 }
