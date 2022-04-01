@@ -6,6 +6,7 @@
     --white: #FEFAE0;
     --cyan: #20A39E;
     --orange: #fe5e41;
+    --dark-orange: #da4025;
     --font-family: 'Open Sans', sans-serif;
 }
 
@@ -96,4 +97,19 @@ a, a:hover, a:focus, a:active {
     gap: 1vmin;
     justify-content: center;
     align-items: center;
+}
+
+.button {
+    background-color: var(--orange);
+    color: var(--white);
+    text-transform: uppercase;
+    padding: 1vmin;
+    border-radius: 1vmin;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.button:hover {
+    color: var(--white);
+    background-color: var(--dark-orange);
 }
