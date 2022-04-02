@@ -17,13 +17,32 @@ table, th, td {
 
 #viewport-menu{
     position: absolute;
-    top: 0;
+    top: 20px;
     left: 0;
-    height: 100%;
-    width: 20%;
+
+    min-height: 60%;
+    max-height: max(calc(100% - 40px), 60%);
+
+    overflow-y: auto;
+
+    min-width: 15%;
+    max-width: 30%;
+
     z-index: 1;
-    background-color: rgba(255,40,255,0.6);
-    border: 1px solid black;
+    background-color: var(--gray);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: var(--white);
+    opacity: 0.35;
+    transition: opacity 0.14s;
+}
+
+#viewport-menu:hover{
+    opacity: 0.9;
+}
+
+.viewport-menu-content{
+    margin: 10px;
 }
 
 .viewport-menu-title-bar {
@@ -31,13 +50,29 @@ table, th, td {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+    align-items: center;
+    padding-bottom: 35px;
 }
 
-#open-menu {
+#open-menu:not(.hidden) {
 	position: absolute;
-	top: 0;
+	top: 20px;
 	left: 0;
 	z-index: 1;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.viewport-menu-title{
+    font-size: 4vmin;
+}
+
+.close-menu {
+    font-size: 2vmin;
+    user-select: none;
 }
 
 #lock {
@@ -54,6 +89,38 @@ table, th, td {
     text-align: center;
     z-index: 1;
     pointer-events: none;
+}
+
+.graph-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.graph-form-row{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25px;
+}
+
+.graph-form-label {
+    padding-bottom: 8px;
+}
+
+.upload {
+    font-weight: 300;
+    width: 80%;
+    text-align: center;
+    vertical-align: center;
+    padding-bottom: 30px;
+}
+
+.graph-form-title {
+    text-align: center;
+    margin-top: 0;
 }
 
 body {
