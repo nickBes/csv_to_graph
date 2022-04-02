@@ -63,6 +63,7 @@ a, a:hover, a:focus, a:active {
 
 #menu-box {
     position: absolute;
+    z-index: 1;
 }
 
 #menu {
