@@ -5,6 +5,7 @@
     --gray: #1a1a1a;
     --white: #FEFAE0;
     --cyan: #20A39E;
+    --dark-cyan: #138a86;
     --orange: #fe5e41;
     --dark-orange: #da4025;
     --font-family: 'Open Sans', sans-serif;
@@ -59,6 +60,19 @@ a, a:hover, a:focus, a:active {
 #navbar nav > h1 {
     margin: 0%;
     color: var(--gray);
+    font-size: 2rem;
+}
+
+#menu-button {
+    display: flex;
+    background-color: var(--cyan);
+    justify-content: center;
+    align-items: center;
+}
+
+#menu-button:hover {
+    background-color: var(--dark-cyan);
+    cursor: pointer;
 }
 
 #menu-box {
@@ -87,7 +101,7 @@ a, a:hover, a:focus, a:active {
 #menu a {
     display: flex;
     justify-content: center;
-    align-self: center;
+    align-items: center;
     gap: 1vmin;
 }
 
@@ -137,4 +151,39 @@ a, a:hover, a:focus, a:active {
 .button:hover {
     color: var(--white);
     background-color: var(--dark-orange);
+}
+
+@media (max-aspect-ratio: 1/1) {
+    #navbar > nav {
+        padding: 5vmin;
+    }
+
+    #navbar > nav > h1 {
+        font-size: 4rem;
+    }
+    #menu-button {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    #menu > li {
+        font-size: 2.5rem;
+        width: 30vmin;
+    }
+
+    #menu span {
+        font-size: 2.5rem;
+    }
+
+    #footer #text {
+        font-size: 2rem;
+    }
+
+    #footer #text span {
+        font-size: 2.5rem;
+    }
+
+    #footer #title {
+        font-size: 4rem;
+    }
 }
