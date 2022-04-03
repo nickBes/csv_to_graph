@@ -1,5 +1,5 @@
 // we have only one input so we can use querySelector
-const csvInput = document.querySelector('#csv')
+const csvInput = document.getElementById('csv')
 const table = document.getElementById('raw-data')
 const lockButton = document.getElementById('lock')
 const canvasAreaElement = document.getElementById('canvas-area')
@@ -8,8 +8,8 @@ const canvasAreaElement = document.getElementById('canvas-area')
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-const graphPropertiesForm = document.querySelector('#graph-form')
-const graphTitle = document.querySelector('#graph-title')
+const graphPropertiesForm = document.getElementById('graph-form')
+const graphTitle = document.getElementById('graph-title')
 const viewportMenu = document.getElementById('viewport-menu')
 const openMenuBtn = document.getElementById('open-menu')
 
@@ -60,8 +60,8 @@ canvas.onwheel = event => {
 
     // translates the scrolled delta Y into a positive number n
     // 0 < n < 1 when scrolling down and n > 1 when scrolling up
-
     const zoomFactor = zoomSpeed ** -Math.sign(event.deltaY) // using Math.sign to equal speed for all devices
+
     const zoomOrigin = [event.offsetX, event.offsetY]
 
     mapAllPoints((point) => zoomPoint(point, zoomFactor, zoomOrigin))
@@ -198,7 +198,7 @@ function sortCoords() {
 }
 
 // find the boundaries of the given points
-function foundBoundariesOfPoints(points) {
+function findBoundaribsOfPoints(points) {
     let [firstPointX, firstPointY] = points[0]
     let left = firstPointX
     let right = firstPointX
@@ -249,7 +249,7 @@ function mapAllPoints(fn) {
 // chooses an initial zoom value which fits the entire graph inside of the canvas.
 function chooseInitialTransformation() {
     // found a boundary which contains all points including the origin
-    let boundaries = foundBoundariesOfPoints([...coords, origin])
+    let boundaries = findBoundaribsOfPoints([...coords, origin])
 
     // find the dimensions of the boundary around all the points and the origin
     const width = boundaries.right - boundaries.left;
@@ -272,7 +272,7 @@ function chooseInitialTransformation() {
     // to do that we should find the new boundaries after zooming the points, and move all points to make
     // the left boundary 0, which is the left of the canvas, and move all points to make the bottom boundary 
     // equal to canvas.height, which is the bottom of the graph.
-    const boundariesAfterZoom = foundBoundariesOfPoints([...coords, origin])
+    const boundariesAfterZoom = findBoundaribsOfPoints([...coords, origin])
     const movement = [-boundariesAfterZoom.left, -(boundariesAfterZoom.bottom - canvas.height)]
     mapAllPoints((point) => movePoint(point, movement))
 }
