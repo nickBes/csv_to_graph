@@ -27,6 +27,10 @@ a, a:hover, a:focus, a:active {
     color: inherit;
 }
 
+img {
+    box-shadow: 2px 5px 15px 5px rgba(0,0,0,0.41);
+}
+
 .box {
     display: block;
     width: fit-content;
