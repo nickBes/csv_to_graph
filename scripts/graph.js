@@ -384,8 +384,11 @@ function manageLockButton() {
         return
     }
 
-    const {bottom, right, left, top} = foundBoundariesOfPoints(coords)
-    if (right < 0 || left > canvas.width || bottom < 0 || top > canvas.height) { // if graph not in canvas view
+    // finds a point that's out of boundaries
+    let outOfBoundaryPoint = coords.find(([x,y]) => {
+        return x > canvas.width || x < 0 || y > canvas.height || y < 0
+    })
+    if (outOfBoundaryPoint) { // if there is an out of boundary point
         lockButton.classList.remove('hidden') // show button
     } else {
         lockButton.classList.add('hidden') // hide button
