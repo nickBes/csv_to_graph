@@ -15,12 +15,12 @@ table, th, td {
     height: 100%;
 }
 
-#viewport-menu{
+#viewport-menu:not(.hidden){
     position: absolute;
-    top: 20px;
+    top: 2vmin;
     left: 0;
 
-    height: max(calc(100% - 50px), 60%);
+    height: max(calc(100% - 4vmin), 60%);
 
     min-width: 15%;
     max-width: 30%;
@@ -45,7 +45,7 @@ table, th, td {
 
 .viewport-menu-content{
     max-height: 100%;
-    padding: 10px;
+    padding: 2vmin;
     display: flex;
     flex-direction: column;
 }
@@ -56,12 +56,12 @@ table, th, td {
 	flex-direction: row;
 	justify-content: space-between;
     align-items: center;
-    padding-bottom: 35px;
+    padding-bottom: 4vmin;
 }
 
 #open-menu:not(.hidden) {
 	position: absolute;
-	top: 20px;
+	top: 2vmin;
 	left: 0;
 	z-index: 1;
     border-top-left-radius: 0;
@@ -72,18 +72,18 @@ table, th, td {
 }
 
 .viewport-menu-title{
-    font-size: 4vmin;
+    font-size: 2rem;
 }
 
 .close-menu {
-    font-size: 2vmin;
+    font-size: 1rem;
     user-select: none;
 }
 
 #lock {
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    right: 1vmin;
+    bottom: 1vmin;
     z-index: 1;
 }
 
@@ -108,11 +108,11 @@ table, th, td {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 25px;
+    padding-bottom: 2vmin;
 }
 
 .graph-form-label {
-    padding-bottom: 8px;
+    padding-bottom: 1vmin;
 }
 
 .upload {
@@ -120,7 +120,7 @@ table, th, td {
     width: 80%;
     text-align: center;
     vertical-align: center;
-    padding-bottom: 30px;
+    padding-bottom: 3vmin;
 }
 
 .graph-form-title {
@@ -130,7 +130,7 @@ table, th, td {
 
 details {
     overflow-y: auto;
-    padding-bottom: 2px;
+    padding-bottom: 0.3vmin;
 }
 
 body {
@@ -138,6 +138,27 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+input {
+    background-color: var(--white);
+    border-radius: 0.5vmin;
+    border: 0;
+    padding: 0.5vmin;
+    text-align: center;
+    color: var(--gray);
+    outline-color: transparent;
+    outline-width: 0.3vmin;
+    outline-style: solid;
+    transition: outline 0.2s;
+}
+
+input:hover{
+    outline-color: var(--cyan);
+}
+
+input:focus{
+    outline-color: var(--dark-cyan);
 }
 
 canvas {
