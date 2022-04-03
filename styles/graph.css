@@ -15,15 +15,39 @@ table, th, td {
     height: 100%;
 }
 
-#viewport-menu{
+#viewport-menu:not(.hidden){
     position: absolute;
-    top: 0;
+    top: 2vmin;
     left: 0;
-    height: 100%;
-    width: 20%;
+
+    height: max(calc(100% - 4vmin), 60%);
+
+    min-width: 15%;
+    max-width: 30%;
+
+    overflow: hidden;
+
     z-index: 1;
-    background-color: rgba(255,40,255,0.6);
-    border: 1px solid black;
+    background-color: var(--gray);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: var(--white);
+    opacity: 0.35;
+    transition: opacity 0.14s;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#viewport-menu:hover{
+    opacity: 0.9;
+}
+
+.viewport-menu-content{
+    max-height: 100%;
+    padding: 2vmin;
+    display: flex;
+    flex-direction: column;
 }
 
 .viewport-menu-title-bar {
@@ -31,19 +55,35 @@ table, th, td {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4vmin;
 }
 
-#open-menu {
+#open-menu:not(.hidden) {
 	position: absolute;
-	top: 0;
+	top: 2vmin;
 	left: 0;
 	z-index: 1;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.viewport-menu-title{
+    font-size: 2rem;
+}
+
+.close-menu {
+    font-size: 1rem;
+    user-select: none;
 }
 
 #lock {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 1vmin;
+    bottom: 1vmin;
     z-index: 1;
 }
 
@@ -56,11 +96,69 @@ table, th, td {
     pointer-events: none;
 }
 
+.graph-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.graph-form-row{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 2vmin;
+}
+
+.graph-form-label {
+    padding-bottom: 1vmin;
+}
+
+.upload {
+    font-weight: 300;
+    width: 80%;
+    text-align: center;
+    vertical-align: center;
+    padding-bottom: 3vmin;
+}
+
+.graph-form-title {
+    text-align: center;
+    margin-top: 0;
+}
+
+details {
+    overflow-y: auto;
+    padding-bottom: 0.3vmin;
+}
+
 body {
     width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+input {
+    background-color: var(--white);
+    border-radius: 0.5vmin;
+    border: 0;
+    padding: 0.5vmin;
+    text-align: center;
+    color: var(--gray);
+    outline-color: transparent;
+    outline-width: 0.3vmin;
+    outline-style: solid;
+    transition: outline 0.2s;
+}
+
+input:hover{
+    outline-color: var(--cyan);
+}
+
+input:focus{
+    outline-color: var(--dark-cyan);
 }
 
 canvas {
