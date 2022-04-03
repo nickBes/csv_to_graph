@@ -97,14 +97,14 @@ document.body.onmousemove = event => {
     }
 }
 
-function closeMenu(){
-	viewportMenu.classList.add('hidden')
-	openMenuBtn.classList.remove('hidden')
+function closeMenu() {
+    viewportMenu.classList.add('hidden')
+    openMenuBtn.classList.remove('hidden')
 }
 
-function openMenu(){
-	openMenuBtn.classList.add('hidden')
-	viewportMenu.classList.remove('hidden')
+function openMenu() {
+    openMenuBtn.classList.add('hidden')
+    viewportMenu.classList.remove('hidden')
 }
 
 // sets up a resize observer that resizes the canvas's buffer according to the size of the
@@ -129,6 +129,7 @@ function setupResizeObserver() {
 // locks the graph right into the canvas view
 function lockOnGraph() {
     chooseInitialTransformation()
+    lockButton.classList.add('hidden')
     drawGraph()
 }
 
