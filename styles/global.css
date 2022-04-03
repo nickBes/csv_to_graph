@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --black: #0f0f07;
-    --gray: #1a1a1a;
-    --white: #FEFAE0;
-    --cyan: #20A39E;
-    --dark-cyan: #138a86;
-    --orange: #fe5e41;
-    --dark-orange: #da4025;
+    --black: #000;
+    --gray: #222;
+    --white: #fff;
+    --cyan: #003049;
+    --dark-cyan: #00263a;
+    --orange: #fcbf49;
+    --dark-orange: #f77f00;
     --font-family: 'Open Sans', sans-serif;
 }
 
