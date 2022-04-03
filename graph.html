@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GraphToCSV</title>
+    <script src="./scripts/graph.js" defer></script>
+    <script src="./scripts/global.js" defer></script>
+    <link rel="stylesheet" href="./styles/graph.css">
+    <link rel="stylesheet" href="./styles/global.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <!-- navbar component -->
+    <div id="navbar">
+        <nav>
+            <h1>CSV TO GRAPH</h1>
+            <div class="spacer"></div>
+            <div class="button" id="menu-button">menu</div>
+        </nav>
+        <div id="menu-box" class="box hidden">
+            <ul id="menu">
+                <li><a href="./main.html"><span class="material-icons">home</span>Home</a></li>
+                <li><a href="./about.html"><span class="material-icons">article</span>About</a></li>
+                <li><a href="./tutorial.html"><span class="material-icons">import_contacts</span>Tutorial</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- end of navbar -->
+    <div id="viewport">
+        <div id="canvas-area"></div>
+        <a href="javascript:void(0)" id="lock" class="hidden button" onclick="lockOnGraph()">Zoom Back</a>
+        <div id="graph-title"></div>
+        <a href="javascript:void(0)" id="open-menu" class="hidden button" onclick="openMenu()">
+            <span class="material-icons">menu</span>
+        </a>
+        <div id="viewport-menu">
+            <div class="viewport-menu-content">
+                <div class="viewport-menu-title-bar">
+                    <div class="viewport-menu-title">MENU</div>
+                    <a href="javascript:void(0)" class="close-menu" onclick="closeMenu()">
+                        <span class="material-icons">close</span>
+                    </a>
+                </div>
+                <div class="graph-form-row">
+                    <label for="csv" class="button upload">Upload</label>
+                    <input id="csv" class="hidden" name="file" accept=".csv" type="file" />
+                </div>
+                <h2 class="graph-form-title">Graph Properties</h2>
+                <form id="graph-form">
+                    <div class="graph-form-row">
+                        <label class="graph-form-label">Line Color</label><input autocomplete="off" type="color" name="lineColor"
+                            value="#ff0000" />
+                    </div>
+                    <div class="graph-form-row">
+                        <label class="graph-form-label">Graph Title</label><input autocomplete="off" type="text" name="graphTitle"
+                            value="Graph">
+                    </div>
+                    <div class="graph-form-row">
+                        <label class="graph-form-label">X axis title</label><input autocomplete="off" type="text" name="xTitle"
+                            value="X axis">
+                    </div>
+                    <div class="graph-form-row">
+                        <label class="graph-form-label">Y axis title</label><input autocomplete="off" type="text" name="yTitle"
+                            value="Y axis">
+                    </div>
+                </form>
+                <details>
+                    <summary>Raw Data</summary>
+                    <div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th>X Values</th>
+                                    <th>Y Values</th>
+                                </tr>
+                            </tbody>
+                            <tbody id="raw-data"></tbody>
+                        </table>
+                    </div>
+                </details>
+            </div>
+        </div>
+        <canvas />
+    </div>
+    <!-- footer component -->
+    <footer id="footer">
+        <h1 id="title">CSV TO GRAPH</h1>
+        <a href="https://github.com/nickBes/csv_to_graph">
+            <div id="text">
+                <p>Contribute on our codebase</p>
+                <span class="material-icons">code</span>
+            </div>
+        </a>
+    </footer>
+    <!-- end of footer -->
+</body>
+
+</html>

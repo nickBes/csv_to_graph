@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing Page</title>
+    <script src="./scripts/global.js" defer></script>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/global.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+<body>
+    <!-- navbar component -->
+    <div id="navbar">
+        <nav>
+            <h1>CSV TO GRAPH</h1>
+            <div class="spacer"></div>
+            <div class="button" id="menu-button">menu</div>
+        </nav>
+        <div id="menu-box" class="box hidden">
+            <ul id="menu">
+                <li><a href="./graph.html"><span class="material-icons">show_chart</span>Visualize</a></li>
+                <li><a href="./about.html"><span class="material-icons">article</span>About</a></li>
+                <li><a href="./tutorial.html"><span class="material-icons">import_contacts</span>Tutorial</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- end of navbar -->
+    <main>
+        <div id="call-to-action">
+            <div id="text-area">
+                <h1>Upload a single CSV file to draw a graph</h1>
+                <p>Using a simple CSV file you could start visualizing your data, inside an interactive grid</p>
+                <a href="graph.html" class="button">visualize</a>
+            </div>
+            <img id="graph-image" src="./public/screenshot.png"/>
+        </div>
+    </main>
+    <!-- footer component -->
+    <footer id="footer">
+        <h1 id="title">CSV TO GRAPH</h1>
+        <a href="https://github.com/nickBes/csv_to_graph">
+            <div id="text">
+                <p>Contribute on our codebase</p>
+                <span class="material-icons">code</span>
+            </div>
+        </a>
+    </footer>
+    <!-- end of footer -->
+</body>
+</html>

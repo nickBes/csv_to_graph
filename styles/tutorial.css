@@ -1,0 +1,52 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3vmin;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 3vmin;
+}
+
+main > * {
+    margin: 0%;
+    width: 50%;
+    text-align: center;
+}
+main > iframe {
+    aspect-ratio: 16/9;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main > h1 {
+    color: var(--black);
+    font-size: 3rem;
+}
+
+main > p {
+    color: var(--gray);
+    font-size: 2rem;
+}
+
+@media (max-aspect-ratio: 1/1) {
+    main > * {
+        width: 90%;
+    }
+
+    main {
+        gap: 10vmin;
+    }
+
+    main > h1 {
+        font-size: 5rem;
+    }
+
+    main > p {
+        font-size: 3.5rem;
+    }
+}

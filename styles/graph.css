@@ -1,0 +1,168 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#viewport {
+    width: 100%;
+    align-self: stretch;
+    position: relative;
+    flex-grow: 1;
+}
+
+#canvas-area{
+    width: 100%;
+    height: 100%;
+}
+
+#viewport-menu:not(.hidden){
+    position: absolute;
+    top: 2vmin;
+    left: 0;
+
+    height: max(calc(100% - 4vmin), 60%);
+
+    min-width: 15%;
+    max-width: 30%;
+
+    overflow: hidden;
+
+    z-index: 1;
+    background-color: var(--gray);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: var(--white);
+    opacity: 0.35;
+    transition: opacity 0.14s;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#viewport-menu:hover{
+    opacity: 0.9;
+}
+
+.viewport-menu-content{
+    max-height: 100%;
+    padding: 2vmin;
+    display: flex;
+    flex-direction: column;
+}
+
+.viewport-menu-title-bar {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4vmin;
+}
+
+#open-menu:not(.hidden) {
+	position: absolute;
+	top: 2vmin;
+	left: 0;
+	z-index: 1;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.viewport-menu-title{
+    font-size: 2rem;
+}
+
+.close-menu {
+    font-size: 1rem;
+    user-select: none;
+}
+
+#lock {
+    position: absolute;
+    right: 1vmin;
+    bottom: 1vmin;
+    z-index: 1;
+}
+
+#graph-title{
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    text-align: center;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.graph-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.graph-form-row{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 2vmin;
+}
+
+.graph-form-label {
+    padding-bottom: 1vmin;
+}
+
+.upload {
+    font-weight: 300;
+    width: 80%;
+    text-align: center;
+    vertical-align: center;
+    padding-bottom: 3vmin;
+}
+
+.graph-form-title {
+    text-align: center;
+    margin-top: 0;
+}
+
+details {
+    overflow-y: auto;
+    padding-bottom: 0.3vmin;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    background-color: var(--white);
+    border-radius: 0.5vmin;
+    border: 0;
+    padding: 0.5vmin;
+    text-align: center;
+    color: var(--gray);
+    outline-color: transparent;
+    outline-width: 0.3vmin;
+    outline-style: solid;
+    transition: outline 0.2s;
+}
+
+input:hover{
+    outline-color: var(--cyan);
+}
+
+input:focus{
+    outline-color: var(--dark-cyan);
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
